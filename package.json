@@ -7,7 +7,7 @@
   "bin": { "jev-skills": "dist/cli.js" },
   "files": ["dist", "hooks", "library", ".claude-plugin", "README.md", "LICENSE"],
   "keywords": ["claude-code", "codex", "plugin", "skills", "hooks", "typesafe", "jev", "context-window", "agents"],
-  "repository": { "type": "git", "url": "https://github.com/eran/jev-skills" },
+  "repository": { "type": "git", "url": "https://github.com/eran-broder/jev-skills" },
   "engines": { "node": ">=20" },
   "scripts": {
     "typecheck": "tsc --noEmit",

@@ -5,7 +5,7 @@
 A plugin for Claude Code and Codex that takes every skill out of the context window and lets a calibrated classifier, TypeSafe's Jev, decide on each turn which ones the model should see.
 
 ```
-claude plugin marketplace add eran/jev-skills
+claude plugin marketplace add eran-broder/jev-skills
 claude plugin install jev-skills@jev-skills --config typesafe_api_key=<key>
 ```
 
@@ -92,7 +92,7 @@ A Jev-driven category stage was tried and rejected. It depended on folder names 
 ### Claude Code
 
 ```
-claude plugin marketplace add eran/jev-skills
+claude plugin marketplace add eran-broder/jev-skills
 claude plugin install jev-skills@jev-skills --config typesafe_api_key=<key>
 ```
 
@@ -103,7 +103,7 @@ For local development: `claude --plugin-dir ./jev-skills`.
 ### Codex
 
 ```
-git clone https://github.com/eran/jev-skills
+git clone https://github.com/eran-broder/jev-skills
 cd jev-skills
 node dist/cli.js setup <key>
 node dist/cli.js install-codex
