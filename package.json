@@ -12,7 +12,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "esbuild src/hook.ts src/cli.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist --banner:js=\"#!/usr/bin/env node\" --log-level=warning",
-    "test": "tsx --test test/*.test.ts",
+    "test": "tsx scripts/test.ts",
     "e2e": "tsx scripts/e2e.ts",
     "scale": "tsx scripts/scaleTest.ts",
     "check": "npm run typecheck && npm test && npm run build"
