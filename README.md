@@ -11,6 +11,10 @@ claude plugin install jev-skills@jev-skills --config typesafe_api_key=<key>
 
 Always-on context cost: **0 tokens**. Library size limit: none that the model can feel.
 
+[![72-second walkthrough with real runs and numbers](media/poster.png)](media/jev-skills.mp4)
+
+*72 seconds, every transcript and number from a real run. Source for the video is in `media/video`.*
+
 ## The problem
 
 Every skill you install costs you on every turn, whether you use it or not. Claude Code lists each skill's name and description in the model's context. Codex does the same and stops at about two percent of the context window, then silently drops the rest.

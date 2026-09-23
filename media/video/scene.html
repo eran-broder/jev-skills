@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>jev-skills</title>
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-3: #7d7c74;
+    --accent: #e551ba;
+    --blue: #3987e5;
+    --orange: #d95926;
+    --good: #0ca30c;
+    --mono: "Consolas", "Cascadia Mono", ui-monospace, monospace;
+    --sans: "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--sans); }
+  .scene { position: absolute; inset: 0; padding: 96px 120px; display: none; }
+  .scene.on { display: block; }
+  .k { color: var(--accent); }
+  .muted { color: var(--ink-2); }
+  .dim { color: var(--ink-3); }
+  .mono { font-family: var(--mono); }
+  h1 { font-size: 132px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  h2 { font-size: 64px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+  .sub { font-size: 44px; color: var(--ink-2); margin-top: 28px; }
+  .eyebrow { font-size: 26px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 28px; }
+  .fade { opacity: 0; transform: translateY(18px); }
+  .terminal { position: absolute; left: 120px; right: 120px; top: 200px; bottom: 80px; background: var(--surface); border: 1px solid #2b2b29; border-radius: 16px; padding: 36px 48px; font-family: var(--mono); font-size: 28px; line-height: 1.5; white-space: pre-wrap; overflow: hidden; }
+  .prompt { color: var(--ink); }
+  .observer { color: var(--accent); }
+  .answer { color: var(--ink-2); }
+  .tool { color: var(--ink-3); }
+  .ok { color: var(--good); }
+  .caret { display: inline-block; width: 16px; height: 34px; background: var(--ink); vertical-align: -6px; margin-left: 4px; }
+  .chips { position: absolute; left: 120px; top: 330px; width: 900px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .chip { font-family: var(--mono); font-size: 26px; padding: 12px 20px; border-radius: 10px; background: var(--surface); border: 1px solid #2b2b29; color: var(--ink-2); opacity: 0; transform: translateY(14px); }
+  .ctx { position: absolute; right: 120px; top: 330px; width: 640px; }
+  .ctx .label { font-size: 28px; color: var(--ink-2); margin-bottom: 18px; }
+  .ctx .bar { height: 56px; background: var(--surface); border: 1px solid #2b2b29; border-radius: 12px; overflow: hidden; }
+  .ctx .fill { height: 100%; width: 0; background: var(--orange); }
+  .ctx .big { font-size: 96px; font-weight: 700; letter-spacing: -0.03em; margin-top: 26px; line-height: 1; }
+  .ctx .big small { font-size: 32px; font-weight: 500; color: var(--ink-2); letter-spacing: 0; margin-left: 14px; }
+  .flow { position: absolute; left: 120px; right: 120px; top: 400px; display: flex; align-items: center; gap: 28px; }
+  .node { background: var(--surface); border: 1px solid #2b2b29; border-radius: 16px; padding: 32px 36px; font-size: 32px; line-height: 1.25; flex: 1; text-align: center; opacity: 0; transform: translateY(14px); }
+  .node.jev { border-color: var(--accent); }
+  .node .t { display: block; font-size: 22px; color: var(--ink-3); margin-top: 10px; font-family: var(--mono); }
+  .arrow { font-size: 48px; color: var(--ink-3); opacity: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 36px; margin-top: 40px; }
+  th { text-align: left; font-weight: 600; color: var(--ink-3); font-size: 26px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 18px; border-bottom: 1px solid #2b2b29; }
+  td { padding: 22px 0; border-bottom: 1px solid #222220; font-family: var(--mono); color: var(--ink); }
+  tr.row { opacity: 0; transform: translateX(-12px); }
+  td.n { color: var(--ink-2); }
+  .bars { position: absolute; left: 120px; right: 120px; top: 390px; display: grid; grid-template-columns: 1fr 1fr; gap: 120px; }
+  .barset .title { font-size: 30px; color: var(--ink-2); margin-bottom: 26px; }
+  .barrow { display: grid; grid-template-columns: 220px 1fr 240px; align-items: center; gap: 24px; margin-bottom: 26px; font-size: 32px; }
+  .barrow .name { color: var(--ink-2); }
+  .barrow .track { height: 40px; background: var(--surface); border-radius: 6px; overflow: hidden; }
+  .barrow .fill { height: 100%; width: 0; border-radius: 0 4px 4px 0; }
+  .barrow .val { font-family: var(--mono); text-align: right; }
+  .fill.jev { background: var(--blue); }
+  .fill.haiku { background: var(--orange); }
+  .legend { position: absolute; left: 120px; bottom: 120px; display: flex; gap: 40px; font-size: 28px; color: var(--ink-2); }
+  .legend span::before { content: ""; display: inline-block; width: 22px; height: 22px; border-radius: 5px; margin-right: 12px; vertical-align: -3px; }
+  .legend .lj::before { background: var(--blue); }
+  .legend .lh::before { background: var(--orange); }
+  .foot { position: absolute; left: 120px; bottom: 120px; font-size: 40px; color: var(--ink-2); opacity: 0; }
+  .cmd { font-family: var(--mono); font-size: 34px; background: var(--surface); border: 1px solid #2b2b29; border-radius: 14px; padding: 30px 40px; margin-top: 40px; opacity: 0; transform: translateY(14px); }
+  .cmd .k { color: var(--accent); }
+  .agents { position: absolute; left: 120px; right: 120px; top: 360px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+  .agent { background: var(--surface); border: 1px solid #2b2b29; border-radius: 16px; padding: 36px 44px; font-family: var(--mono); font-size: 28px; line-height: 1.7; opacity: 0; transform: translateY(14px); }
+  .agent .name { font-family: var(--sans); font-size: 40px; font-weight: 700; margin-bottom: 16px; }
+  .url { position: absolute; left: 120px; bottom: 110px; font-size: 44px; font-family: var(--mono); color: var(--ink); opacity: 0; }
+  .brand { position: absolute; right: 120px; bottom: 96px; font-size: 26px; color: var(--ink-3); font-family: var(--mono); }
+</style>
+</head>
+<body>
+
+<section class="scene" id="s-title">
+  <div style="position:absolute; left:120px; top:360px;">
+    <h1 class="fade" data-in="200">jev<span class="k">-</span>skills</h1>
+    <div class="sub fade" data-in="900" style="font-size:56px;">Skills without the context tax.</div>
+    <div class="sub fade dim" data-in="1700" style="font-size:34px;">A plugin for Claude Code and Codex</div>
+  </div>
+</section>
+
+<section class="scene" id="s-problem">
+  <div class="eyebrow fade" data-in="0">The problem</div>
+  <h2 class="fade" data-in="200">Every turn, your model reads every skill you have installed.</h2>
+  <div class="chips" id="chips"></div>
+  <div class="ctx">
+    <div class="label fade" data-in="600">Context spent before you type a word</div>
+    <div class="bar"><div class="fill" id="ctxfill"></div></div>
+    <div class="big"><span id="ctxcount">0</span><small>tokens, every turn</small></div>
+    <div class="label fade" data-in="5200" style="margin-top:40px; color:var(--ink-3);">13 skills on one machine. Codex caps the list at ~2% of context and silently drops the rest.</div>
+  </div>
+</section>
+
+<section class="scene" id="s-idea">
+  <div class="eyebrow fade" data-in="0">The idea</div>
+  <h2 class="fade" data-in="200">Routing is not reasoning.<br /><span class="muted">It needs a fast, cheap, calibrated yes or no.</span></h2>
+  <div class="flow">
+    <div class="node" data-in="1400">user prompt<br />or tool result<span class="t">hook fires</span></div>
+    <div class="arrow" data-in="1800">→</div>
+    <div class="node jev" data-in="2000"><span class="k">Jev</span> System One<span class="t">one yes/no question per skill</span></div>
+    <div class="arrow" data-in="2400">→</div>
+    <div class="node" data-in="2600">probability<br />per skill<span class="t">0.97 · 0.85 · 0.02 …</span></div>
+    <div class="arrow" data-in="3000">→</div>
+    <div class="node" data-in="3200">only the winners<br />enter context<span class="t">full SKILL.md, once per session</span></div>
+  </div>
+  <div class="foot" data-in="4400">400 skills judged in one request, in under a second, for a tenth of a cent.</div>
+</section>
+
+<section class="scene" id="s-demo">
+  <div class="eyebrow fade" data-in="0">Real runs · Claude Code · <span class="mono">claude-haiku-4-5</span></div>
+  <div class="terminal" id="term"></div>
+</section>
+
+<section class="scene" id="s-numbers">
+  <div class="eyebrow fade" data-in="0">Measured on jev-1.13</div>
+  <h2 class="fade" data-in="200">Right skills every time. <span class="muted">Cost that does not scale with your library.</span></h2>
+  <table>
+    <thead><tr><th>Library</th><th>Sent to Jev</th><th>Requests</th><th>Latency</th><th>Cost per turn</th><th>Precision</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="foot" data-in="5200">Always-on context cost: <span class="k mono">0 tokens</span>. Before: 1,350 per turn.</div>
+</section>
+
+<section class="scene" id="s-why">
+  <div class="eyebrow fade" data-in="0">Why not an LLM for the routing</div>
+  <h2 class="fade" data-in="200">Same triage task, 60 answers each.</h2>
+  <div class="bars">
+    <div class="barset">
+      <div class="title fade" data-in="900">Latency, p50</div>
+      <div class="barrow"><span class="name">Jev</span><div class="track"><div class="fill jev" data-bar="173" data-max="700" data-in="1200"></div></div><span class="val" data-count="173" data-suffix=" ms" data-in="1200">0</span></div>
+      <div class="barrow"><span class="name">Haiku 4.5</span><div class="track"><div class="fill haiku" data-bar="669" data-max="700" data-in="1500"></div></div><span class="val" data-count="669" data-suffix=" ms" data-in="1500">0</span></div>
+    </div>
+    <div class="barset">
+      <div class="title fade" data-in="2400">Cost per million decisions</div>
+      <div class="barrow"><span class="name">Jev</span><div class="track"><div class="fill jev" data-bar="17.5" data-max="500" data-in="2700"></div></div><span class="val" data-count="17.5" data-prefix="$" data-in="2700" data-dec="1">0</span></div>
+      <div class="barrow"><span class="name">Haiku 4.5</span><div class="track"><div class="fill haiku" data-bar="476" data-max="500" data-in="3000"></div></div><span class="val" data-count="476" data-prefix="$" data-in="3000">0</span></div>
+    </div>
+  </div>
+  <div class="legend fade" data-in="900"><span class="lj">Jev 1.13</span><span class="lh">Claude Haiku 4.5, plain-text prompt</span></div>
+  <div class="foot fade" data-in="4200" style="bottom:200px;">27× cheaper, 4× faster, deterministic. Same department picks on 100% of tickets.</div>
+</section>
+
+<section class="scene" id="s-agents">
+  <div class="eyebrow fade" data-in="0">End-to-end, both agents</div>
+  <h2 class="fade" data-in="200">Same hook. Same library. Same answers.</h2>
+  <div class="agents">
+    <div class="agent" data-in="1000"><div class="name">Claude Code</div><span class="ok">PASS</span>  prompt match       pineapple-protocol<br /><span class="ok">PASS</span>  prompt no match    nothing injected<br /><span class="ok">PASS</span>  tool result match  harvest-ledger</div>
+    <div class="agent" data-in="1600"><div class="name">Codex</div><span class="ok">PASS</span>  prompt match       pineapple-protocol<br /><span class="ok">PASS</span>  prompt no match    nothing injected<br /><span class="dim">hooks via ~/.codex/hooks.json</span></div>
+  </div>
+  <div class="foot" data-in="3000">Fails open on every error. Your prompt is never blocked.</div>
+</section>
+
+<section class="scene" id="s-install">
+  <div class="eyebrow fade" data-in="0">Try it</div>
+  <h2 class="fade" data-in="200">Two commands.</h2>
+  <div class="cmd" data-in="900"><span class="k">$</span> claude plugin marketplace add eran-broder/jev-skills</div>
+  <div class="cmd" data-in="1500"><span class="k">$</span> claude plugin install jev-skills@jev-skills --config typesafe_api_key=&lt;key&gt;</div>
+  <div class="url" data-in="2600">github.com/eran-broder/jev-skills</div>
+  <div class="brand">MIT · powered by TypeSafe Jev</div>
+</section>
+
+<script>
+const SCENES = [
+  { id: "s-title", start: 0, end: 5000 },
+  { id: "s-problem", start: 5000, end: 14000 },
+  { id: "s-idea", start: 14000, end: 21500 },
+  { id: "s-demo", start: 21500, end: 45500 },
+  { id: "s-numbers", start: 45500, end: 54000 },
+  { id: "s-why", start: 54000, end: 61000 },
+  { id: "s-agents", start: 61000, end: 66500 },
+  { id: "s-install", start: 66500, end: 72000 },
+];
+const TOTAL_MS = SCENES[SCENES.length - 1].end;
+
+const SKILLS = ["agents-sdk", "cloudflare", "cloudflare-email-service", "cloudflare-one", "cloudflare-one-migrations", "durable-objects", "sandbox-sdk", "spartan", "turnstile-spin", "web-perf", "workers-best-practices", "wrangler", "yad2-search"];
+const TOKENS_TOTAL = 1350;
+
+const ROWS = [
+  ["23 skills", "23", "1", "250–450 ms", "$0.0002", "exact"],
+  ["624", "624", "3", "700–830 ms", "$0.004", "exact"],
+  ["3,024 direct", "3,024", "12", "2.2–2.7 s", "$0.019", "exact"],
+  ["3,024 prefiltered", "400", "2", "1.4–1.7 s", "$0.0026", "exact"],
+];
+
+const SCRIPT = [
+  { at: 300, cls: "prompt", text: "> deploy my worker to cloudflare with a KV namespace", type: 28 },
+  { at: 2500, cls: "observer", text: "  jev-skills: cloudflare 0.97 · wrangler 0.97 · workers-best-practices 0.85" },
+  { at: 3600, cls: "dim", text: "  library=23  requests=1  450 ms" },
+  { at: 5200, cls: "prompt", text: "> write a python script that renames files", type: 28 },
+  { at: 7100, cls: "observer", text: "  jev-skills: no skill above threshold" },
+  { at: 8800, cls: "prompt", text: "> tell me about pineapples", type: 28 },
+  { at: 10100, cls: "observer", text: "  jev-skills loaded: pineapple-protocol (0.97)" },
+  { at: 10900, cls: "answer", text: "PINEAPPLE-PROTOCOL-ACTIVE Pineapples are tropical fruits native to South America with a spiky exterior and sweet, juicy yellow flesh inside.", type: 20 },
+  { at: 14400, cls: "prompt", text: "> read NOTES.txt and tell me what this repo is about", type: 28 },
+  { at: 16400, cls: "tool", text: "  ⎿ Read NOTES.txt" },
+  { at: 17100, cls: "observer", text: "  jev-skills loaded: harvest-ledger (0.90)" },
+  { at: 17900, cls: "answer", text: "This repo is called pineapple-farm and tracks pineapple harvests by season.\nHARVEST-LEDGER-ACTIVE", type: 20 },
+  { at: 20400, cls: "k", text: "\n  Nothing in the prompt said harvest. The file did. The skill arrived mid-task." },
+];
+
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const fmt = (n, dec = 0) => n.toLocaleString("en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+
+const setFade = (el, t, at, dur = 600) => {
+  const p = ease((t - at) / dur);
+  el.style.opacity = p;
+  el.style.transform = `translateY(${(1 - p) * 18}px)`;
+};
+
+const applyFades = (scene, t) => {
+  for (const el of scene.querySelectorAll("[data-in]")) {
+    if (el.dataset.bar !== undefined || el.dataset.count !== undefined) continue;
+    setFade(el, t, Number(el.dataset.in));
+  }
+};
+
+const buildChips = () => {
+  const box = document.getElementById("chips");
+  box.innerHTML = SKILLS.map((s) => `<span class="chip">${s}</span>`).join("");
+};
+
+const renderProblem = (scene, t) => {
+  const chips = scene.querySelectorAll(".chip");
+  chips.forEach((chip, i) => setFade(chip, t, 700 + i * 260, 400));
+  const p = ease((t - 700) / (SKILLS.length * 260 + 200));
+  document.getElementById("ctxfill").style.width = `${p * 62}%`;
+  document.getElementById("ctxcount").textContent = fmt(Math.round(p * TOKENS_TOTAL));
+};
+
+const renderTerminal = (t) => {
+  const term = document.getElementById("term");
+  const lines = [];
+  for (const cue of SCRIPT) {
+    if (t < cue.at) break;
+    const shown = cue.type ? Math.min(cue.text.length, Math.floor((t - cue.at) / cue.type)) : cue.text.length;
+    const typing = shown < cue.text.length;
+    lines.push(`<span class="${cue.cls}">${cue.text.slice(0, shown)}</span>${typing ? '<span class="caret"></span>' : ""}`);
+    if (typing) break;
+  }
+  term.innerHTML = lines.join("\n");
+};
+
+const buildRows = () => {
+  document.getElementById("rows").innerHTML = ROWS.map(
+    (r) => `<tr class="row">${r.map((c, i) => `<td class="${i === 0 ? "" : "n"}">${c}</td>`).join("")}</tr>`,
+  ).join("");
+};
+
+const renderRows = (scene, t) => {
+  scene.querySelectorAll("tr.row").forEach((row, i) => {
+    const p = ease((t - (1000 + i * 700)) / 500);
+    row.style.opacity = p;
+    row.style.transform = `translateX(${(1 - p) * -12}px)`;
+  });
+};
+
+const renderBars = (scene, t) => {
+  for (const el of scene.querySelectorAll("[data-bar]")) {
+    const p = ease((t - Number(el.dataset.in)) / 900);
+    el.style.width = `${(Number(el.dataset.bar) / Number(el.dataset.max)) * 100 * p}%`;
+  }
+  for (const el of scene.querySelectorAll("[data-count]")) {
+    const p = ease((t - Number(el.dataset.in)) / 900);
+    const dec = Number(el.dataset.dec ?? 0);
+    el.style.opacity = p > 0 ? 1 : 0;
+    el.textContent = `${el.dataset.prefix ?? ""}${fmt(Number(el.dataset.count) * p, dec)}${el.dataset.suffix ?? ""}`;
+  }
+};
+
+const RENDERERS = {
+  "s-problem": renderProblem,
+  "s-demo": (_scene, t) => renderTerminal(t),
+  "s-numbers": renderRows,
+  "s-why": renderBars,
+};
+
+window.seek = (ms) => {
+  for (const s of SCENES) {
+    const el = document.getElementById(s.id);
+    const on = ms >= s.start && ms < s.end;
+    el.classList.toggle("on", on);
+    if (!on) continue;
+    const t = ms - s.start;
+    applyFades(el, t);
+    RENDERERS[s.id]?.(el, t);
+  }
+};
+window.totalMs = () => TOTAL_MS;
+
+buildChips();
+buildRows();
+const preview = new URLSearchParams(location.search).get("t");
+if (preview !== null) window.seek(Number(preview));
+else {
+  const started = performance.now();
+  const tick = () => { window.seek((performance.now() - started) % TOTAL_MS); requestAnimationFrame(tick); };
+  tick();
+}
+</script>
+</body>
+</html>

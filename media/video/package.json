@@ -1,0 +1,18 @@
+{
+  "name": "jev-skills-video",
+  "private": true,
+  "type": "module",
+  "description": "Renders the jev-skills launch video: an HTML timeline stepped frame by frame in headless Chrome and piped into ffmpeg.",
+  "scripts": {
+    "render": "tsx render.ts",
+    "stills": "tsx stills.ts"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
