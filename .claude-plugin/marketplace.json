@@ -1,0 +1,12 @@
+{
+  "name": "jev-skills",
+  "owner": { "name": "Eran" },
+  "plugins": [
+    {
+      "name": "jev-skills",
+      "source": "./",
+      "description": "Skills without the context tax. TypeSafe's Jev model watches every turn and injects only the skills that matter.",
+      "version": "0.1.0"
+    }
+  ]
+}

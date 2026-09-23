@@ -1,0 +1,18 @@
+{
+  "name": "jev-skills",
+  "displayName": "Jev Skills Observer",
+  "description": "Keeps skills out of the context window. On every prompt and tool result, TypeSafe's Jev model reads the skill library and injects only the skills that are relevant right now.",
+  "version": "0.1.0",
+  "author": { "name": "Eran" },
+  "license": "MIT",
+  "keywords": ["skills", "context", "typesafe", "jev", "observer"],
+  "userConfig": {
+    "typesafe_api_key": {
+      "type": "string",
+      "title": "TypeSafe API key",
+      "description": "Key for api.typesafe.ai (console.typesafe.ai/keys). Passed to the hook as CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY.",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "jev-skills",
+  "version": "0.1.0",
+  "description": "Skills without the context tax. A Claude Code and Codex plugin that keeps skills out of the context window and lets TypeSafe's Jev model inject only the ones that matter, on every turn.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "jev-skills": "dist/cli.js" },
+  "files": ["dist", "hooks", "library", ".claude-plugin", "README.md", "LICENSE"],
+  "keywords": ["claude-code", "codex", "plugin", "skills", "hooks", "typesafe", "jev", "context-window", "agents"],
+  "repository": { "type": "git", "url": "https://github.com/eran/jev-skills" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "esbuild src/hook.ts src/cli.ts --bundle --platform=node --target=node20 --format=esm --outdir=dist --banner:js=\"#!/usr/bin/env node\" --log-level=warning",
+    "test": "tsx --test test/*.test.ts",
+    "e2e": "tsx scripts/e2e.ts",
+    "scale": "tsx scripts/scaleTest.ts",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.25.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}
