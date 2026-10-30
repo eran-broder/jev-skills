@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const ENDPOINT = "https://api.typesafe.ai/v1/systemone";
+const BRIDGE_ENDPOINT = "http://127.0.0.1:4319/v1/systemone";
 const RETRYABLE = new Set([429, 529, 502, 503]);
 const MAX_ATTEMPTS = 3;
 const BACKOFF_MS = 300;
@@ -46,7 +47,7 @@ const retryDelay = (response: Response, attempt: number) => {
 };
 
 const post = async (apiKey: string, request: SystemOneRequest, timeoutMs: number) =>
-  fetch(ENDPOINT, {
+  fetch(process.env.JEV_SKILLS_USE_BRIDGE === "1" ? BRIDGE_ENDPOINT : ENDPOINT, {
     method: "POST",
     headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
     body: JSON.stringify(request),

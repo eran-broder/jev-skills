@@ -171,3 +171,7 @@ npm run scale -- 3000
 ## License
 
 MIT
+
+## Local Jev bridge (Ryan local patch)
+
+Set `JEV_SKILLS_USE_BRIDGE=1` for the hook process to send requests through `http://127.0.0.1:4319/v1/systemone` using the bridge sentinel. Configure library paths separately; this does not install hooks. If the bridge is unavailable, the existing hook fail-open behavior applies. Without this flag, upstream behavior is unchanged.

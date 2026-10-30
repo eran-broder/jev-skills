@@ -38,7 +38,7 @@ export const defaultLibraries = () => [join(pluginRoot(), "library"), join(dataH
 
 const readJson = (path: string): unknown => (existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : {});
 
-const envApiKey = () => API_KEY_ENV.map((name) => process.env[name]).find((value) => value && value.length > 0);
+const envApiKey = () => process.env.JEV_SKILLS_USE_BRIDGE === "1" ? "via-jev-bridge" : API_KEY_ENV.map((name) => process.env[name]).find((value) => value && value.length > 0);
 
 const withEnvOverrides = (config: Config): Config => ({ ...config, apiKey: envApiKey() ?? config.apiKey });
 

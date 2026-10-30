@@ -19832,7 +19832,7 @@ var API_KEY_ENV = ["CLAUDE_PLUGIN_OPTION_TYPESAFE_API_KEY", "TYPESAFE_API_KEY"];
 var configFile = () => join3(dataHome(), "config.json");
 var defaultLibraries = () => [join3(pluginRoot(), "library"), join3(dataHome(), "library")];
 var readJson = (path) => existsSync2(path) ? JSON.parse(readFileSync2(path, "utf8")) : {};
-var envApiKey = () => API_KEY_ENV.map((name) => process.env[name]).find((value) => value && value.length > 0);
+var envApiKey = () => process.env.JEV_SKILLS_USE_BRIDGE === "1" ? "via-jev-bridge" : API_KEY_ENV.map((name) => process.env[name]).find((value) => value && value.length > 0);
 var withEnvOverrides = (config2) => ({ ...config2, apiKey: envApiKey() ?? config2.apiKey });
 var withDefaultLibraries = (config2) => config2.libraries.length > 0 ? config2 : { ...config2, libraries: defaultLibraries() };
 var loadConfig = () => withDefaultLibraries(withEnvOverrides(ConfigSchema.parse(readJson(configFile()))));
@@ -19854,6 +19854,7 @@ var requireApiKey = (config2) => {
 
 // src/jev/client.ts
 var ENDPOINT = "https://api.typesafe.ai/v1/systemone";
+var BRIDGE_ENDPOINT = "http://127.0.0.1:4319/v1/systemone";
 var RETRYABLE = /* @__PURE__ */ new Set([429, 529, 502, 503]);
 var MAX_ATTEMPTS = 3;
 var BACKOFF_MS = 300;
@@ -19874,7 +19875,7 @@ var retryDelay = (response, attempt) => {
   const header = Number(response.headers.get("retry-after"));
   return Number.isFinite(header) && header > 0 ? header * 1e3 : BACKOFF_MS * 2 ** attempt;
 };
-var post = async (apiKey, request, timeoutMs) => fetch(ENDPOINT, {
+var post = async (apiKey, request, timeoutMs) => fetch(process.env.JEV_SKILLS_USE_BRIDGE === "1" ? BRIDGE_ENDPOINT : ENDPOINT, {
   method: "POST",
   headers: { authorization: `Bearer ${apiKey}`, "content-type": "application/json" },
   body: JSON.stringify(request),
